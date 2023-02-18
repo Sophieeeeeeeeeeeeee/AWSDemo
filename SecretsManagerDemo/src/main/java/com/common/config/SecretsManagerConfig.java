@@ -31,13 +31,14 @@ public class SecretsManagerConfig {
         String secretName = "mysecret1";
         String region = "ap-northeast-1";
         SecretsData secrets = getSecret(secretName,region);
-        return DataSourceBuilder
+        DataSource dataSource = DataSourceBuilder
                 .create()
-                //.driverClassName("com.mysql.cj.jdbc.driver")
-                .url("jdbc:" + secrets.getEngine() + "://" + secrets.getHost() + ":" + secrets.getPort() + "/mydatabase")
+                //.driverClassName("com.mysql.cj.jdbc.Driver")
+                .url("jdbc:" + secrets.getEngine() + "://" + secrets.getHost() + ":" + secrets.getPort())
                 .username(secrets.getUsername())
                 .password(secrets.getPassword())
                 .build();
+        return dataSource;
     }
 
     public SecretsData getSecret(String secretName,String region) {
