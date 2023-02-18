@@ -16,32 +16,21 @@ import org.springframework.context.annotation.Configuration;
 import javax.sql.DataSource;
 
 /**
+ * SecretsManager配置类
  * @author Sophiee
  */
 @Configuration
 public class SecretsManagerConfig {
 
-    @Value("${cloud.aws.credentials.access-key}")
-    private String accessKey;
-    @Value("${cloud.aws.credentials.secret-key}")
-    private String secretKey;
-
-    @Bean
-    public DataSource dataSource() {
-        String secretName = "mysecret1";
-        String region = "ap-northeast-1";
-        SecretsData secrets = getSecret(secretName,region);
-        DataSource dataSource = DataSourceBuilder
-                .create()
-                //.driverClassName("com.mysql.cj.jdbc.Driver")
-                .url("jdbc:" + secrets.getEngine() + "://" + secrets.getHost() + ":" + secrets.getPort())
-                .username(secrets.getUsername())
-                .password(secrets.getPassword())
-                .build();
-        return dataSource;
-    }
-
-    public SecretsData getSecret(String secretName,String region) {
+     /**
+     * 获取秘密
+     * @param accessKey 连接键
+     * @param secretKey 秘钥键
+     * @param secretName 秘密名
+     * @param region 区域
+     * @return SecretsData 秘密数据
+     */
+    public SecretsData getSecret(String accessKey, String secretKey, String secretName, String region) {
         Gson gson = new Gson();
 
         AWSSecretsManager client = AWSSecretsManagerClientBuilder.standard()
